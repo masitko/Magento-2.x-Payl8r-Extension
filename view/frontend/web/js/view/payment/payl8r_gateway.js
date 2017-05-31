@@ -1,7 +1,4 @@
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
+
 /*browser:true*/
 /*global define*/
 define(
@@ -21,6 +18,12 @@ define(
             }
         );
         /** Add view logic here if needed */
-        return Component.extend({});
+        return Component.extend({
+            redirectAfterPlaceOrder: function() {
+              console.log('DUPA');
+            },
+
+          
+        });
     }
 );

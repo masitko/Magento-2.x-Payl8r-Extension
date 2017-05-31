@@ -1,13 +1,12 @@
 <?php
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
+
 namespace Magento\Payl8rPaymentGateway\Gateway\Request;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
+use Psr\Log\LoggerInterface;
 
 class AuthorizationRequest implements BuilderInterface
 {
@@ -15,14 +14,19 @@ class AuthorizationRequest implements BuilderInterface
      * @var ConfigInterface
      */
     private $config;
+    private $logger;
+    
 
     /**
      * @param ConfigInterface $config
      */
     public function __construct(
-        ConfigInterface $config
+        ConfigInterface $config,
+        LoggerInterface $logger = null
     ) {
         $this->config = $config;
+        $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
+
     }
 
     /**
@@ -44,6 +48,13 @@ class AuthorizationRequest implements BuilderInterface
         $order = $payment->getOrder();
         $address = $order->getShippingAddress();
 
+        $this->logger->critical('CRITICAL TEST!');
+        $this->logger->debug('DEBUG TEST!');
+        $this->logger->addDebug('ADD DEBUG TEST!');
+        $this->logger->info('TEST!!!!!');
+//        $this->logger->info($order);
+//        var_dump($order);
+        
         return [
             'TXN_TYPE' => 'A',
             'INVOICE' => $order->getOrderIncrementId(),

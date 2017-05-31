@@ -1,7 +1,4 @@
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
+
 /*browser:true*/
 /*global define*/
 define(
@@ -25,7 +22,15 @@ define(
                     ]);
                 return this;
             },
+            afterPlaceOrder:function() {
+              console.log('DUPA 3');
+            },
+            
 
+            redirectAfterPlaceOrder: function() {
+              console.log('DUPA 2');
+            },
+            
             getCode: function() {
                 return 'payl8r_gateway';
             },
@@ -33,7 +38,7 @@ define(
             getLogo: function() {
                 return require.toUrl('Magento_Payl8rPaymentGateway')+'/images/payl8rlogo.png';
             },
-
+            
             getData: function() {
                 return {
                     'method': this.item.method,

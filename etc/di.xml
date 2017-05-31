@@ -1,143 +1,161 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!-- Payment Method Facade configuration -->
-    <virtualType name="Payl8rPaymentGatewayFacade" type="Magento\Payment\Model\Method\Adapter">
-        <arguments>
-            <argument name="code" xsi:type="const">\Magento\Payl8rPaymentGateway\Model\Ui\ConfigProvider::CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Magento\Payl8rPaymentGateway\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">Payl8rPaymentGatewayValueHandlerPool</argument>
-            <argument name="commandPool" xsi:type="object">Payl8rPaymentGatewayCommandPool</argument>
-        </arguments>
-    </virtualType>
+  <!-- Payment Method Facade configuration -->
+  <virtualType name="Payl8rPaymentGatewayFacade" type="Magento\Payment\Model\Method\Adapter">
+    <arguments>
+      <argument name="code" xsi:type="const">\Magento\Payl8rPaymentGateway\Model\Ui\ConfigProvider::CODE</argument>
+      <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+      <argument name="infoBlockType" xsi:type="string">Magento\Payl8rPaymentGateway\Block\Info</argument>
+      <argument name="valueHandlerPool" xsi:type="object">Payl8rPaymentGatewayValueHandlerPool</argument>
+      <argument name="validatorPool" xsi:type="object">Payl8rPaymentGatewayValidatorPool</argument>
+      <argument name="commandPool" xsi:type="object">Payl8rPaymentGatewayCommandPool</argument>
+    </arguments>
+  </virtualType>
 
-    <!-- Configuration reader -->
-    <virtualType name="Payl8rPaymentGatewayConfig" type="Magento\Payment\Gateway\Config\Config">
-        <arguments>
-            <argument name="methodCode" xsi:type="const">\Magento\Payl8rPaymentGateway\Model\Ui\ConfigProvider::CODE</argument>
-        </arguments>
-    </virtualType>
+  <!-- Configuration reader -->
+  <virtualType name="Payl8rPaymentGatewayConfig" type="Magento\Payment\Gateway\Config\Config">
+    <arguments>
+      <argument name="methodCode" xsi:type="const">\Magento\Payl8rPaymentGateway\Model\Ui\ConfigProvider::CODE</argument>
+    </arguments>
+  </virtualType>
 
-    <!-- Logger, initialized with Payl8rPaymentGatewayConfig -->
-    <virtualType name="Payl8rPaymentGatewayLogger" type="Magento\Payment\Model\Method\Logger">
-        <arguments>
-            <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
-        </arguments>
-    </virtualType>
+  <!-- Logger, initialized with Payl8rPaymentGatewayConfig -->
+  <virtualType name="Payl8rPaymentGatewayLogger" type="Magento\Payment\Model\Method\Logger">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </virtualType>
 
-    <type name="Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock">
-        <arguments>
-            <argument name="logger" xsi:type="object">Payl8rPaymentGatewayLogger</argument>
-        </arguments>
-    </type>
+  <type name="Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock">
+    <arguments>
+      <argument name="logger" xsi:type="object">Payl8rPaymentGatewayLogger</argument>
+    </arguments>
+  </type>
 
-    <!-- Commands infrastructure -->
-    <virtualType name="Payl8rPaymentGatewayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
-        <arguments>
-            <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">Payl8rPaymentGatewayAuthorizeCommand</item>
-                <item name="capture" xsi:type="string">Payl8rPaymentGatewayCaptureCommand</item>
-                <item name="void" xsi:type="string">Payl8rPaymentGatewayVoidCommand</item>
-            </argument>
-        </arguments>
-    </virtualType>
+  <!-- Commands infrastructure -->
+  <virtualType name="Payl8rPaymentGatewayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <arguments>
+      <argument name="commands" xsi:type="array">
+        <item name="authorize" xsi:type="string">Payl8rPaymentGatewayAuthorizeCommand</item>
+        <item name="capture" xsi:type="string">Payl8rPaymentGatewayCaptureCommand</item>
+        <item name="void" xsi:type="string">Payl8rPaymentGatewayVoidCommand</item>
+      </argument>
+    </arguments>
+  </virtualType>
 
-    <!-- Authorize command -->
-    <virtualType name="Payl8rPaymentGatewayAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
-        <arguments>
-            <argument name="requestBuilder" xsi:type="object">Payl8rPaymentGatewayAuthorizationRequest</argument>
-            <argument name="handler" xsi:type="object">Payl8rPaymentGatewayResponseHandlerComposite</argument>
-            <argument name="transferFactory" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\TransferFactory</argument>
-            <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
-        </arguments>
-    </virtualType>
+  <!-- Authorize command -->
+  <virtualType name="Payl8rPaymentGatewayAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <arguments>
+      <argument name="requestBuilder" xsi:type="object">Payl8rPaymentGatewayAuthorizationRequest</argument>
+      <argument name="handler" xsi:type="object">Payl8rPaymentGatewayResponseHandlerComposite</argument>
+      <argument name="transferFactory" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\TransferFactory</argument>
+      <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
+    </arguments>
+  </virtualType>
 
-    <!-- Authorization Request -->
-    <virtualType name="Payl8rPaymentGatewayAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
-        <arguments>
-            <argument name="builders" xsi:type="array">
-                <item name="transaction" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Request\AuthorizationRequest</item>
-                <item name="mockData" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Request\MockDataRequest</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <type name="Magento\Payl8rPaymentGateway\Gateway\Request\AuthorizationRequest">
-        <arguments>
-            <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
-        </arguments>
-    </type>
+  <!-- Authorization Request -->
+  <virtualType name="Payl8rPaymentGatewayAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+    <arguments>
+      <argument name="builders" xsi:type="array">
+        <item name="transaction" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Request\AuthorizationRequest</item>
+        <item name="mockData" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Request\MockDataRequest</item>
+      </argument>
+    </arguments>
+  </virtualType>
+  <type name="Magento\Payl8rPaymentGateway\Gateway\Request\AuthorizationRequest">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </type>
 
-    <!-- Capture command -->
-    <virtualType name="Payl8rPaymentGatewayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
-        <arguments>
-            <argument name="requestBuilder" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Request\CaptureRequest</argument>
-            <argument name="handler" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</argument>
-            <argument name="transferFactory" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\TransferFactory</argument>
-            <argument name="validator" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Validator\ResponseCodeValidator</argument>
-            <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
-        </arguments>
-    </virtualType>
+  <!-- Capture command -->
+  <virtualType name="Payl8rPaymentGatewayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <arguments>
+      <argument name="requestBuilder" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Request\CaptureRequest</argument>
+      <argument name="handler" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</argument>
+      <argument name="transferFactory" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\TransferFactory</argument>
+      <argument name="validator" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Validator\ResponseCodeValidator</argument>
+      <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
+    </arguments>
+  </virtualType>
 
-    <!-- Capture Request -->
-    <type name="Magento\Payl8rPaymentGateway\Gateway\Request\CaptureRequest">
-        <arguments>
-            <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
-        </arguments>
-    </type>
+  <!-- Capture Request -->
+  <type name="Magento\Payl8rPaymentGateway\Gateway\Request\CaptureRequest">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </type>
 
-    <!-- Void command -->
-    <virtualType name="Payl8rPaymentGatewayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
-        <arguments>
-            <argument name="requestBuilder" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest</argument>
-            <argument name="handler" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</argument>
-            <argument name="transferFactory" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\TransferFactory</argument>
-            <argument name="validator" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Validator\ResponseCodeValidator</argument>
-            <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
-        </arguments>
-    </virtualType>
+  <!-- Void command -->
+  <virtualType name="Payl8rPaymentGatewayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <arguments>
+      <argument name="requestBuilder" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest</argument>
+      <argument name="handler" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</argument>
+      <argument name="transferFactory" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\TransferFactory</argument>
+      <argument name="validator" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Validator\ResponseCodeValidator</argument>
+      <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
+    </arguments>
+  </virtualType>
 
-    <!-- Void Request -->
-    <type name="Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest">
-        <arguments>
-            <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
-        </arguments>
-    </type>
+  <!-- Void Request -->
+  <type name="Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </type>
 
-    <!-- Response handlers -->
-    <virtualType name="Payl8rPaymentGatewayResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="txnid" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</item>
-                <item name="fraud" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\FraudHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
+  <!-- Response handlers -->
+  <virtualType name="Payl8rPaymentGatewayResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+    <arguments>
+      <argument name="handlers" xsi:type="array">
+        <item name="txnid" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</item>
+        <item name="fraud" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\FraudHandler</item>
+      </argument>
+    </arguments>
+  </virtualType>
 
-    <!-- Value handlers infrastructure -->
-    <virtualType name="Payl8rPaymentGatewayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">Payl8rPaymentGatewayConfigValueHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="Payl8rPaymentGatewayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
-        <arguments>
-            <argument name="configInterface" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
-        </arguments>
-    </virtualType>
+  <!-- Validators infrastructure -->
+  <virtualType name="Payl8rPaymentGatewayCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="Magento\Payl8rPaymentGateway\Gateway\Validator\GlobalValidator">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="Payl8rPaymentGatewayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <arguments>
+      <argument name="validators" xsi:type="array">
+        <item name="country" xsi:type="string">Payl8rPaymentGatewayCountryValidator</item>
+        <!--<item name="global" xsi:type="string">Payl8rPaymentGatewayGlobalValidator</item>-->
+        <!--<item name="country" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Validator\CountryValidator</item>-->
+        <item name="global" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Validator\GlobalValidator</item>
+      </argument>
+    </arguments>
+  </virtualType>
 
-    <type name="Magento\Payl8rPaymentGateway\Block\Info">
-        <arguments>
-            <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
-        </arguments>
-    </type>
+
+  <!-- Value handlers infrastructure -->
+  <virtualType name="Payl8rPaymentGatewayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <arguments>
+      <argument name="handlers" xsi:type="array">
+        <item name="default" xsi:type="string">Payl8rPaymentGatewayConfigValueHandler</item>
+      </argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="Payl8rPaymentGatewayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <arguments>
+      <argument name="configInterface" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </virtualType>
+
+  <type name="Magento\Payl8rPaymentGateway\Block\Info">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+    </arguments>
+  </type>
 
 </config>
