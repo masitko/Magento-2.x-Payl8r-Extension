@@ -6,7 +6,8 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Psr\Log\LoggerInterface;
+use Magento\Payment\Model\Method\Logger;
+//use Psr\Log\LoggerInterface;
 
 class AuthorizationRequest implements BuilderInterface
 {
@@ -22,7 +23,7 @@ class AuthorizationRequest implements BuilderInterface
      */
     public function __construct(
         ConfigInterface $config,
-        LoggerInterface $logger = null
+        Logger $logger = null
     ) {
         $this->config = $config;
         $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
@@ -48,10 +49,10 @@ class AuthorizationRequest implements BuilderInterface
         $order = $payment->getOrder();
         $address = $order->getShippingAddress();
 
-        $this->logger->critical('CRITICAL TEST!');
-        $this->logger->debug('DEBUG TEST!');
-        $this->logger->addDebug('ADD DEBUG TEST!');
-        $this->logger->info('TEST!!!!!');
+//        $this->logger->critical('CRITICAL TEST!');
+        $this->logger->debug(array('DEBUG DEBUG TEST!', 'some more'));
+//        $this->logger->addDebug('ADD DEBUG TEST!');
+//        $this->logger->info('TEST!!!!!');
 //        $this->logger->info($order);
 //        var_dump($order);
         

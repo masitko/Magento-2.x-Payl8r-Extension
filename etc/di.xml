@@ -48,8 +48,8 @@
   <virtualType name="Payl8rPaymentGatewayAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
     <arguments>
       <argument name="requestBuilder" xsi:type="object">Payl8rPaymentGatewayAuthorizationRequest</argument>
-      <argument name="handler" xsi:type="object">Payl8rPaymentGatewayResponseHandlerComposite</argument>
       <argument name="transferFactory" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\TransferFactory</argument>
+      <argument name="handler" xsi:type="object">Payl8rPaymentGatewayResponseHandlerComposite</argument>
       <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
     </arguments>
   </virtualType>
@@ -66,6 +66,7 @@
   <type name="Magento\Payl8rPaymentGateway\Gateway\Request\AuthorizationRequest">
     <arguments>
       <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+      <argument name="logger" xsi:type="object">Payl8rPaymentGatewayLogger</argument>
     </arguments>
   </type>
 
@@ -116,12 +117,12 @@
   </virtualType>
 
   <!-- Validators infrastructure -->
-  <virtualType name="Payl8rPaymentGatewayCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+  <virtualType name="Payl8rPaymentGatewayCountryValidator" type="Magento\Payl8rPaymentGateway\Gateway\Validator\CountryValidator">
     <arguments>
       <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
     </arguments>
   </virtualType>
-  <virtualType name="Magento\Payl8rPaymentGateway\Gateway\Validator\GlobalValidator">
+  <virtualType name="Payl8rPaymentGatewayGlobalValidator" type="Magento\Payl8rPaymentGateway\Gateway\Validator\GlobalValidator">
     <arguments>
       <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
     </arguments>
@@ -130,9 +131,7 @@
     <arguments>
       <argument name="validators" xsi:type="array">
         <item name="country" xsi:type="string">Payl8rPaymentGatewayCountryValidator</item>
-        <!--<item name="global" xsi:type="string">Payl8rPaymentGatewayGlobalValidator</item>-->
-        <!--<item name="country" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Validator\CountryValidator</item>-->
-        <item name="global" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Validator\GlobalValidator</item>
+        <item name="global" xsi:type="string">Payl8rPaymentGatewayGlobalValidator</item>
       </argument>
     </arguments>
   </virtualType>
