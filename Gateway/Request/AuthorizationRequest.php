@@ -106,13 +106,13 @@ class AuthorizationRequest implements BuilderInterface {
     $this->logger->debug(array('DATA COMMING!!!!!'));
     $this->logger->debug($data);
 
-    die();
+//    die();
     return [
         'TXN_TYPE' => 'A',
         'INVOICE' => $order->getOrderIncrementId(),
         'AMOUNT' => $order->getGrandTotalAmount(),
         'CURRENCY' => $order->getCurrencyCode(),
-        'EMAIL' => $address->getEmail(),
+        'EMAIL' => $billing->getEmail(),
         'MERCHANT_KEY' => $this->config->getValue(
           'merchant_gateway_key', $order->getStoreId()
         )
