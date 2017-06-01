@@ -1,13 +1,13 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 22-May-2017, 23:18:11
-    Author     : marek
-*/
 
-  .payment-method-title img {
-    vertical-align: middle;
-  }
+.payment-method-title img {
+  vertical-align: middle;
+}
+
+.payl8r-iframe {
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  min-height: 600px;
+  width: 100%;
+}

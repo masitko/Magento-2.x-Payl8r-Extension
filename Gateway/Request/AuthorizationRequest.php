@@ -8,6 +8,7 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Framework\UrlInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 
 //use Psr\Log\LoggerInterface;
 
@@ -19,16 +20,21 @@ class AuthorizationRequest implements BuilderInterface {
   private $config;
   private $logger;
   private $urlBuilder;
+  private $encryptor;
+
 
   /**
    * @param ConfigInterface $config
    */
   public function __construct(
-  ConfigInterface $config, UrlInterface $urlBuilder, Logger $logger = null
+  ConfigInterface $config, UrlInterface $urlBuilder, 
+        EncryptorInterface $encryptor,
+          Logger $logger = null
   ) {
     $this->config = $config;
     $this->urlBuilder = $urlBuilder;
-    $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
+    $this->encryptor = $encryptor;
+    $this->logger = $logger ? : ObjectManager::getInstance()->get(LoggerInterface::class);
   }
 
   /**
@@ -50,8 +56,8 @@ class AuthorizationRequest implements BuilderInterface {
     $shipping = $order->getShippingAddress();
 
     $test = $this->config->getValue('test_mode', $order->getStoreId());
-    $username = $this->config->getValue('merchant_username', $order->getStoreId());
-    $publicKey = $this->config->getValue('merchant_gateway_key', $order->getStoreId());
+    $username = $this->encryptor->decrypt($this->config->getValue('merchant_username', $order->getStoreId()));
+    $publicKey = $this->encryptor->decrypt($this->config->getValue('merchant_gateway_key', $order->getStoreId()));
 
     $abortUrl = $this->urlBuilder->getUrl('payl8rpaymentgateway/payment/abort');
     $failUrl = $this->urlBuilder->getUrl('payl8rpaymentgateway/payment/fail');
@@ -73,34 +79,34 @@ class AuthorizationRequest implements BuilderInterface {
 //        $this->logger->debug($order);
 
     $data = array(
-        "username" => $username,
-        "request_data" => array(
-            "return_urls" => array(
-                "abort" => str_replace('http:', 'https:', $abortUrl),
-                "fail" => str_replace('http:', 'https:', $failUrl),
-                "success" => str_replace('http:', 'https:', $successUrl),
-                "return_data" => str_replace('http:', 'https:', $returnUrl),
-            ),
-            "request_type" => "standard_finance_request",
-            "test_mode" => (int) $test,
-            "order_details" => array(
-                "order_id" => $order->getOrderIncrementId(),
-                "description" => implode("<br>", $products),
-                "currency" => "GBP",
-                "total" => floatval($order->getGrandTotalAmount())
-            ),
-            "customer_details" => array(
-                "student" => 0,
-                "firstnames" => $billing ? $billing->getFirstname(): '',
-                "surname" => $billing ? $billing->getLastname(): '',
-                "email" => $billing ? $billing->getEmail(): '',
-                "phone" => $billing ? $billing->getTelephone() : '',
-                "address" => $billing ? $billing->getStreetLine1() : '',
-                "city" => $billing ? $billing->getCity() : '',
-                "country" => "UK",
-                "postcode" => $billing ? str_replace(' ', '', $billing->getPostcode()) : '',
-            )
+      "username" => $username,
+      "request_data" => array(
+        "return_urls" => array(
+          "abort" => str_replace('http:', 'https:', $abortUrl),
+          "fail" => str_replace('http:', 'https:', $failUrl),
+          "success" => str_replace('http:', 'https:', $successUrl),
+          "return_data" => str_replace('http:', 'https:', $returnUrl),
+        ),
+        "request_type" => "standard_finance_request",
+        "test_mode" => (int) $test,
+        "order_details" => array(
+          "order_id" => $order->getOrderIncrementId(),
+          "description" => implode("<br>", $products),
+          "currency" => "GBP",
+          "total" => floatval($order->getGrandTotalAmount())
+        ),
+        "customer_details" => array(
+          "student" => 0,
+          "firstnames" => $billing ? $billing->getFirstname() : '',
+          "surname" => $billing ? $billing->getLastname() : '',
+          "email" => $billing ? $billing->getEmail() : '',
+          "phone" => $billing ? $billing->getTelephone() : '',
+          "address" => $billing ? $billing->getStreetLine1() : '',
+          "city" => $billing ? $billing->getCity() : '',
+          "country" => "UK",
+          "postcode" => $billing ? str_replace(' ', '', $billing->getPostcode()) : '',
         )
+      )
     );
 
     $this->logger->debug(array('DATA COMMING!!!!!'));
@@ -108,14 +114,14 @@ class AuthorizationRequest implements BuilderInterface {
 
 //    die();
     return [
-        'TXN_TYPE' => 'A',
-        'INVOICE' => $order->getOrderIncrementId(),
-        'AMOUNT' => $order->getGrandTotalAmount(),
-        'CURRENCY' => $order->getCurrencyCode(),
-        'EMAIL' => $billing->getEmail(),
-        'MERCHANT_KEY' => $this->config->getValue(
-          'merchant_gateway_key', $order->getStoreId()
-        )
+      'TXN_TYPE' => 'A',
+      'INVOICE' => $order->getOrderIncrementId(),
+      'AMOUNT' => $order->getGrandTotalAmount(),
+      'CURRENCY' => $order->getCurrencyCode(),
+      'EMAIL' => $billing->getEmail(),
+      'MERCHANT_KEY' => $this->config->getValue(
+              'merchant_gateway_key', $order->getStoreId()
+      )
     ];
   }
 

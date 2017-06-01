@@ -22,10 +22,11 @@ final class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 self::CODE => [
-                    'transactionResults' => [
-                        ClientMock::SUCCESS => __('Success'),
-                        ClientMock::FAILURE => __('Fraud')
-                    ]
+//                    'transactionResults' => [
+//                        ClientMock::SUCCESS => __('Success'),
+//                        ClientMock::FAILURE => __('Fraud')
+//                    ],
+                    'actionUrl' => 'https://payl8r.com/process'
                 ]
             ]
         ];

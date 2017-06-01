@@ -23,9 +23,9 @@
             <!--/ko-->
         </div>
 
-        <div class="field required">
+<!--        <div class="field required">
             <label data-bind="attr: {for: getCode() + '_transaction_result'}" class="label">
-                <span><!-- ko i18n: 'Transaction Result'--><!-- /ko --></span>
+                <span> ko i18n: 'Transaction Result' /ko </span>
             </label>
 
             <div class="control">
@@ -39,19 +39,39 @@
                                   value: transactionResult">
                 </select>
             </div>
-        </div>
+        </div>-->
 
         <div class="actions-toolbar">
             <div class="primary">
-                <button class="action primary checkout"
+                <button class="button action primary checkout"
                         type="submit"
                         data-bind="
-                        click: placeOrder,
-                        attr: {title: $t('Continue to Payl8r')}
+                        click: placePendingPaymentOrder,
+                        attr: {title: $t('Continue to Payl8r')},
+                        css: {disabled: !isPlaceOrderActionAllowed()
                         ">
                     <span data-bind="i18n: 'Continue to Payl8r'"></span>
                 </button>
             </div>
         </div>
+        
+        <div data-bind="visible: isInAction()">
+            <div id="iframe-warning" class="message notice">
+                <div><!-- ko i18n: 'Please do not refresh the page until you complete payment.' --><!-- /ko --></div>
+            </div>
+            <!-- ko if: isPaymentReady() -->
+            <iframe data-bind="attr: {id: getCode() + '-iframe', src: getActionUrl()}, event: {load: iframeLoaded}"
+                    data-container="paypal-iframe"
+                    class="payl8r-iframe"
+                    scrolling="no"
+                    frameborder="0"
+                    border="0"
+                    height="610"
+                    width="100%"
+                    >
+            </iframe>
+            <!-- /ko -->
+        </div>
+        
     </div>
 </div>
