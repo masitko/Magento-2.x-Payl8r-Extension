@@ -22,7 +22,7 @@ define(
 
         this._super()
           .observe([
-            'transactionResult',
+//            'transactionResult',
             'paymentReady'
           ]);
         return this;
@@ -36,7 +36,7 @@ define(
       placePendingPaymentOrder: function () {
         console.log('PLACE PENDING.....');
         console.log(this.getData());
-        return;
+//        return;
         if (this.placeOrder()) {
           fullScreenLoader.startLoader();
           this.isInAction(true);
@@ -71,6 +71,7 @@ define(
         console.log(data);
       },
       iframeLoaded: function () {
+        console.log('IFRAME LOADED!');
         fullScreenLoader.stopLoader();
       },
       getCode: function () {

@@ -4,4 +4,7 @@
     <event name="payment_method_assign_data">
         <observer name="payl8r_payment_gateway_data_assign" instance="Magento\Payl8rPaymentGateway\Observer\DataAssignObserver" />
     </event>
+    <event name="checkout_submit_all_after">
+        <observer name="payl8r_payment_gateway_save_order_after_submit" instance="Magento\Payl8rPaymentGateway\Observer\SaveOrderAfterSubmitObserver" />
+    </event>
 </config>

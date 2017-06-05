@@ -52,6 +52,10 @@ class AuthorizationRequest implements BuilderInterface {
     /** @var PaymentDataObjectInterface $payment */
     $payment = $buildSubject['payment'];
     $order = $payment->getOrder();
+    
+//    $order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+//    $order->setStatus('payl8r_pending');
+    
     $billing = $order->getBillingAddress();
     $shipping = $order->getShippingAddress();
 
