@@ -13,6 +13,7 @@
                             <item name="children" xsi:type="array">
                                 <item name="steps" xsi:type="array">
                                     <item name="children" xsi:type="array">
+                                      
                                         <item name="billing-step" xsi:type="array">
                                             <item name="component" xsi:type="string">uiComponent</item>
                                             <item name="children" xsi:type="array">
@@ -35,6 +36,18 @@
                                                 </item>
                                             </item>
                                         </item>
+                                        
+                                            <!--<item name="review-step" xsi:type="array">-->
+                                                <!--<item name="component" xsi:type="string">Magento_Payl8rPaymentGateway/js/view/review/review-step</item>-->
+                                                    <!--To display step content before shipping step "sortOrder" value should be < 1-->
+                                                    <!--To display step content between shipping step and payment step  1 < "sortOrder" < 2 -->
+                                                    <!--To display step content after payment step "sortOrder" > 2 -->
+                                                <!--<item name="sortOrder" xsi:type="string">2</item>-->
+                                                <!--<item name="children" xsi:type="array">-->
+                                                    <!--add here child component declaration for your step-->
+                                                <!--</item>-->
+                                            <!--</item>-->                                        
+                                        
                                     </item>
                                 </item>
                             </item>

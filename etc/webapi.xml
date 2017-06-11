@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <!-- Guest place order with payment information saving -->
+    <route url="/V1/payl8r/guest-carts/:cartId/payment-information" method="POST">
+        <service class="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" method="savePaymentInformationAndGetIframeData"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <!-- Guest place order with payment information saving -->
+    <route url="/V1/payl8r/guest-carts/:cartId/payment-information" method="GET">
+        <service class="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" method="getPaymentInformation"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <!-- My place order with payment information saving -->
+    <route url="/V1/payl8r/carts/mine/payment-information" method="POST">
+        <service class="Magento\Payl8rPaymentGateway\Api\PaymentInformationManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+    <!-- Get payment information -->
+    <route url="/V1/payl8r/carts/mine/payment-information" method="GET">
+        <service class="Magento\Payl8rPaymentGateway\Api\PaymentInformationManagementInterface" method="getPaymentInformation"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+</routes>

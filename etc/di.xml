@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  
+  
+    <preference for="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" 
+                type="Magento\Payl8rPaymentGateway\Model\GuestPaymentInformationManagement" />
+    <preference for="Magento\Payl8rPaymentGateway\Api\PaymentInformationManagementInterface" 
+                type="Magento\Payl8rPaymentGateway\Model\PaymentInformationManagement" />
+
   <!-- Payment Method Facade configuration -->
   <virtualType name="Payl8rPaymentGatewayFacade" type="Magento\Payment\Model\Method\Adapter">
     <arguments>
