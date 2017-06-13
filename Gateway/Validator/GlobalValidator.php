@@ -32,7 +32,7 @@ class GlobalValidator extends AbstractValidator
     {
         $this->logger->info('Global!!!');
         $isValid = true;
-        $storeId = $validationSubject['storeId'];
+//        $storeId = $validationSubject['storeId'];
 
 //        if ((int)$this->config->getValue('allowspecific', $storeId) === 1) {
 //            $availableCountries = explode(

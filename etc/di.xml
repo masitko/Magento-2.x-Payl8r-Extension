@@ -107,18 +107,19 @@
   </virtualType>
 
   <!-- Void Request -->
-  <type name="Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest">
+<!--  <type name="Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest">
     <arguments>
       <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
     </arguments>
-  </type>
+  </type>-->
 
   <!-- Response handlers -->
   <virtualType name="Payl8rPaymentGatewayResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
     <arguments>
       <argument name="handlers" xsi:type="array">
-        <item name="txnid" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</item>
-        <item name="fraud" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\FraudHandler</item>
+        <item name="payl8r" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\Payl8rHandler</item>
+<!--        <item name="txnid" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</item>
+        <item name="fraud" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\FraudHandler</item>-->
       </argument>
     </arguments>
   </virtualType>

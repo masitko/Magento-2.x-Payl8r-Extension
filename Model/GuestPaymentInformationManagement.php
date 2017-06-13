@@ -94,8 +94,6 @@ class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPa
         \Magento\Quote\Api\Data\PaymentInterface $paymentMethod,
         \Magento\Quote\Api\Data\AddressInterface $billingAddress = null
     ) {
-        $this->logger->info('Payment method 1 !!!');
-      die('XXXXXXXXX');
         $this->savePaymentInformation($cartId, $email, $paymentMethod, $billingAddress);
         try {
             $orderId = $this->cartManagement->placeOrder($cartId);
@@ -111,7 +109,10 @@ class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPa
                 $e
             );
         }
-        return $orderId;
+        return array( 
+          'order' => $orderId,
+          'test'  => $this->dataHelper->test()
+          );
     }
 
     /**

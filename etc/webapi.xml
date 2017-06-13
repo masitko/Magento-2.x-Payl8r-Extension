@@ -10,7 +10,7 @@
 
     <!-- Guest place order with payment information saving -->
     <route url="/V1/payl8r/guest-carts/:cartId/payment-information" method="POST">
-        <service class="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" method="savePaymentInformationAndGetIframeData"/>
+        <service class="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" method="savePaymentInformationAndPlaceOrder"/>
         <resources>
             <resource ref="anonymous" />
         </resources>
