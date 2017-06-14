@@ -26,10 +26,17 @@ class Payl8rHandler implements HandlerInterface
         $paymentDO = $handlingSubject['payment'];
 
         $payment = $paymentDO->getPayment();
+        $order = $payment->getOrder();
+        $message = $order->getCustomerNote();
 
         /** @var $payment \Magento\Sales\Model\Order\Payment */
         $payment->setIsTransactionPending(true);
-        $payment->updateOrder($payment->getOrder(), 'pending_payment', 'payl8r_pending', false );
+        
+//        $order->setState('pending_payment')
+//            ->setStatus('payl8r_pending')
+//            ->addStatusHistoryComment('waiting for authorisation...')
+//            ->setIsCustomerNotified(false)
+//          ;
         
         
     }
