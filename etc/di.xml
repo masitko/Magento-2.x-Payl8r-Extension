@@ -3,10 +3,18 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
   
   
-    <preference for="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" 
+  <preference for="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" 
                 type="Magento\Payl8rPaymentGateway\Model\GuestPaymentInformationManagement" />
-    <preference for="Magento\Payl8rPaymentGateway\Api\PaymentInformationManagementInterface" 
+  <preference for="Magento\Payl8rPaymentGateway\Api\PaymentInformationManagementInterface" 
                 type="Magento\Payl8rPaymentGateway\Model\PaymentInformationManagement" />
+
+  <!-- Data Helper -->
+  <type name="Magento\Payl8rPaymentGateway\Helper\Data">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+      <argument name="logger" xsi:type="object">Payl8rPaymentGatewayLogger</argument>
+    </arguments>
+  </type>
 
   <!-- Payment Method Facade configuration -->
   <virtualType name="Payl8rPaymentGatewayFacade" type="Magento\Payment\Model\Method\Adapter">
@@ -60,6 +68,12 @@
       <argument name="client" xsi:type="object">Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock</argument>
     </arguments>
   </virtualType>
+  
+  <type name="Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation">
+    <arguments>
+      <argument name="stateCommand" xsi:type="object">Magento\Payl8rPaymentGateway\Model\Order\Payment\State\AuthorizeCommand</argument>
+    </arguments>
+  </type>
 
   <!-- Authorization Request -->
   <virtualType name="Payl8rPaymentGatewayAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
@@ -76,7 +90,7 @@
       <argument name="logger" xsi:type="object">Payl8rPaymentGatewayLogger</argument>
     </arguments>
   </type>
-
+  
   <!-- Capture command -->
   <virtualType name="Payl8rPaymentGatewayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
     <arguments>
@@ -107,7 +121,7 @@
   </virtualType>
 
   <!-- Void Request -->
-<!--  <type name="Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest">
+  <!--  <type name="Magento\Payl8rPaymentGateway\Gateway\Request\VoidRequest">
     <arguments>
       <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
     </arguments>
@@ -118,7 +132,7 @@
     <arguments>
       <argument name="handlers" xsi:type="array">
         <item name="payl8r" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\Payl8rHandler</item>
-<!--        <item name="txnid" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</item>
+        <!--        <item name="txnid" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\TxnIdHandler</item>
         <item name="fraud" xsi:type="string">Magento\Payl8rPaymentGateway\Gateway\Response\FraudHandler</item>-->
       </argument>
     </arguments>

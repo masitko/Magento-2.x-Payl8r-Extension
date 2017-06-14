@@ -82,7 +82,6 @@ class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPa
         $this->dataHelper = $dataHelper;
         $this->cartRepository = $cartRepository;
         
-        echo get_class($this->cartManagement);
     }
 
     /**
@@ -109,9 +108,10 @@ class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPa
                 $e
             );
         }
+                
         return array( 
           'order' => $orderId,
-          'test'  => $this->dataHelper->test()
+          'iframeData'  => $this->dataHelper->prepareIframeData($orderId)
           );
     }
 

@@ -26,8 +26,6 @@ class Payl8rHandler implements HandlerInterface
         $paymentDO = $handlingSubject['payment'];
 
         $payment = $paymentDO->getPayment();
-        $order = $payment->getOrder();
-        $message = $order->getCustomerNote();
 
         /** @var $payment \Magento\Sales\Model\Order\Payment */
         $payment->setIsTransactionPending(true);

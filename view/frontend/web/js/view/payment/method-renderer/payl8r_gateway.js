@@ -38,10 +38,6 @@ define(
             },
             placePendingPaymentOrder: function () {
               console.log('PLACE PENDING.....');
-              console.log(this.getData());
-              console.log(quote.billingAddress());
-              this.getIframeData();
-              return;
               if (this.placeOrder()) {
                 fullScreenLoader.startLoader();
                 this.isInAction(true);
@@ -52,7 +48,9 @@ define(
             getPlaceOrderDeferredObject: function () {
               console.log('PLACE ORDER DEFFERED.....');
               var self = this;
-              return this._super().fail(function () {
+
+//              return this._super().fail(function () {
+              return this.placeOrderPayl8r().fail(function () {
                 fullScreenLoader.stopLoader();
                 self.isInAction(false);
                 document.removeEventListener('click', iframe.stopEventPropagation, true);
@@ -79,7 +77,7 @@ define(
               fullScreenLoader.stopLoader();
             },
 
-            getIframeData: function () {
+            placeOrderPayl8r: function () {
 //            fullScreenLoader.startLoader();
 
               var payload = {
@@ -93,6 +91,10 @@ define(
               });
               return storage.post(
                       serviceUrl, JSON.stringify(payload)
+                    ).done(
+                        function ( response ) {
+                          console.log(response);
+                        }
                       ).fail(
                       function (response) {
 //                    errorProcessor.process(response, messageContainer);
