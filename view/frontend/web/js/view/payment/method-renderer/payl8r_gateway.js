@@ -17,21 +17,31 @@ define(
             defaults: {
               template: 'Magento_Payl8rPaymentGateway/payment/form',
 //        transactionResult: '',
-              paymentReady: false
+              paymentReady: false,
+              iframeAction: '',
+              iframeUsername: '',
+              iframePayload: '',
             },
             redirectAfterPlaceOrder: false,
             isInAction: iframe.isInAction,
             initObservable: function () {
 
-              this._super()
-                      .observe([
-//            'transactionResult',
-                        'paymentReady'
+              this._super().observe([
+                        'paymentReady', 'iframeAction', 'iframeUsername', 'iframePayload'
                       ]);
               return this;
             },
             isPaymentReady: function () {
               return this.paymentReady();
+            },
+            getIframeAction: function () {
+              return this.iframeAction();
+            },
+            getIframeUsername: function () {
+              return this.iframeUsername();
+            },
+            getIframePayload: function () {
+              return this.iframePayload();
             },
             getActionUrl: function () {
               return this.isInAction() ? window.checkoutConfig.payment[this.getCode()].actionUrl : '';
@@ -79,7 +89,7 @@ define(
 
             placeOrderPayl8r: function () {
 //            fullScreenLoader.startLoader();
-
+              var self = this;
               var payload = {
                 cartId: quote.getQuoteId(),
                 billingAddress: quote.billingAddress(),
@@ -89,21 +99,39 @@ define(
               var serviceUrl = urlBuilder.createUrl('/payl8r/guest-carts/:quoteId/payment-information', {
                 quoteId: quote.getQuoteId()
               });
-              return storage.post(
-                      serviceUrl, JSON.stringify(payload)
-                    ).done(
-                        function ( response ) {
-                          console.log(response);
-                        }
-                      ).fail(
-                      function (response) {
+              return storage.post(serviceUrl, JSON.stringify(payload))
+                      .done(
+                              function (response) {
+                                if ('undefined' !== response[1] && response[1]) {
+                                  self.paymentReady(true);
+                                  self.iframeAction(response[1].action);
+                                  self.iframeUsername(response[1].rid);
+                                  self.iframePayload(response[1].data);
+                                  window.addEventListener("message", pl_iframe_heightUpdate, false);
+                                   var prevHeight = jQuery('[name="payl8rFrame"]').height();
+                                  function pl_iframe_heightUpdate(event) {
+                                    var origin = event.origin || event.originalEvent.origin;
+                                    if (origin !== "https://payl8r.com")
+                                      return;
+                                    console.log('RESIZING!!!', prevHeight, jQuery('[name="payl8rFrame"]').height());
+                                    if (prevHeight !== jQuery('[name="payl8rFrame"]').height())
+                                      prevHeight = event.data;
+                                      jQuery('[name="payl8rFrame"]').height(event.data);
+                                  }
+                                  document.getElementById("payl8rForm").submit();
+                                }
+                              }
+                      )
+                      .fail(
+                              function (response) {
 //                    errorProcessor.process(response, messageContainer);
-                      }
-              ).always(
-                      function () {
-                        fullScreenLoader.stopLoader();
-                      }
-              );
+                              }
+                      )
+                      .always(
+                              function () {
+                                fullScreenLoader.stopLoader();
+                              }
+                      );
 
             },
             getCode: function () {

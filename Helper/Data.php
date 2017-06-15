@@ -89,10 +89,10 @@ class Data extends AbstractHelper {
             "request_type" => "standard_finance_request",
             "test_mode" => (int) $test,
             "order_details" => array(
-                "order_id" => $order->getOrderIncrementId(),
+                "order_id" => $orderId,
                 "description" => implode("<br>", $products),
                 "currency" => "GBP",
-                "total" => floatval($order->getGrandTotalAmount())
+                "total" => floatval($order->getGrandTotal())
             ),
             "customer_details" => array(
                 "student" => 0,

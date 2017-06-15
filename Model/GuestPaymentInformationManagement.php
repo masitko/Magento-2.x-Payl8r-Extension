@@ -108,11 +108,11 @@ class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPa
                 $e
             );
         }
-                
-        return array( 
+                 
+        return [
           'order' => $orderId,
           'iframeData'  => $this->dataHelper->prepareIframeData($orderId)
-          );
+          ];
     }
 
     /**
