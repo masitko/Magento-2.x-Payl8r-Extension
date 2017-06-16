@@ -15,6 +15,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Payment\Model\Method\Logger;
+use Magento\Sales\Model\Order;
 
 /**
  * Authorize.net Data Helper
@@ -57,15 +58,9 @@ class Data extends AbstractHelper {
     $test = $this->config->getValue('test_mode', $order->getStoreId());
     $username = $this->config->getValue('merchant_username', $order->getStoreId());
     $publicKey = $this->config->getValue('merchant_gateway_key', $order->getStoreId());
-//    $username = $this->encryptor->decrypt($this->config->getValue('merchant_username', $order->getStoreId()));
-//    $publicKey = $this->encryptor->decrypt($this->config->getValue('merchant_gateway_key', $order->getStoreId()));
     
-//    var_dump($username);
-//    var_dump($this->config->getValue('merchant_gateway_key', $order->getStoreId()));
-//    var_dump($publicKey);
-    
-    $abortUrl = $this->urlBuilder->getUrl('payl8rpaymentgateway/payment/abort');
-    $failUrl = $this->urlBuilder->getUrl('payl8rpaymentgateway/payment/fail');
+    $abortUrl = $this->urlBuilder->getUrl('checkout/onepage/failure');
+    $failUrl = $this->urlBuilder->getUrl('checkout/onepage/failure');
     $successUrl = $this->urlBuilder->getUrl('checkout/onepage/success');
     $returnUrl = $this->urlBuilder->getUrl('payl8rpaymentgateway/payment/response');
 
@@ -126,5 +121,38 @@ class Data extends AbstractHelper {
       'action' => 'https://payl8r.com/process'
     );
   }
+  
+  public function processResponse( $response ) {
+    
+    $order = $this->orderRepository->get($response->order_id);
+    switch( $response->status  ) {
+      case 'ACCEPTED':
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus('payl8r_accepted');
+                    $state = Order::STATE_PAYMENT_REVIEW;
+            $status = Order::STATUS_FRAUD;
+
+        $order->setState( Mage_Sales_Model_Order::STATE_PROCESSING, 'payl8r_accepted', 'Payment Successful', true );
+        $order->save();
+        try {
+          $order->queueNewOrderEmail();
+        } catch (Exception $e) {}
+        break;
+      case 'DECLINED':
+        $order->setState(  Mage_Sales_Model_Order::STATE_CANCELED, 'payl8r_declined', $response->reason, false );
+        $order->save();
+        break;
+      case 'ABANDONED':
+      default:
+        $order->setState(  Mage_Sales_Model_Order::STATE_CANCELED, 'payl8r_abandoned', $response->reason, false );
+        $order->save();
+        break;
+    }
+    
+    Mage::log( $order->getState(), null, 'system.log', true );              
+
+  }
+  
+  
 
 }
