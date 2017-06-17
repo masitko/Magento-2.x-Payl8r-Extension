@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
 namespace Magento\Payl8rPaymentGateway\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
@@ -16,12 +11,9 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 
-/**
- * Authorize.net Data Helper
- *
- * @api
- */
+
 class Data extends AbstractHelper {
 
   private $orderRepository;
@@ -29,17 +21,23 @@ class Data extends AbstractHelper {
   private $logger;
   private $urlBuilder;
   private $encryptor;
+  private $orderSender;
 
   /**
-   * @param \Magento\Framework\App\Helper\Context $context
-   * @param \Magento\Sales\Model\OrderRepository $orderRepository
+   * 
+   * @param Context $context
+   * @param OrderRepository $orderRepository
+   * @param ConfigInterface $config
+   * @param EncryptorInterface $encryptor
+   * @param Logger $logger
    */
   public function __construct(
-  Context $context, OrderRepository $orderRepository, ConfigInterface $config, UrlInterface $urlBuilder, EncryptorInterface $encryptor, Logger $logger
+  Context $context, OrderRepository $orderRepository, OrderSender $orderSender, ConfigInterface $config, EncryptorInterface $encryptor, Logger $logger
   ) {
     $this->orderRepository = $orderRepository;
+    $this->orderSender = $orderSender;
     $this->config = $config;
-    $this->urlBuilder = $urlBuilder;
+//    $this->urlBuilder = $urlBuilder;
     $this->encryptor = $encryptor;
     $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
 
@@ -59,10 +57,10 @@ class Data extends AbstractHelper {
     $username = $this->config->getValue('merchant_username', $order->getStoreId());
     $publicKey = $this->config->getValue('merchant_gateway_key', $order->getStoreId());
     
-    $abortUrl = $this->urlBuilder->getUrl('checkout/onepage/failure');
-    $failUrl = $this->urlBuilder->getUrl('checkout/onepage/failure');
-    $successUrl = $this->urlBuilder->getUrl('checkout/onepage/success');
-    $returnUrl = $this->urlBuilder->getUrl('payl8rpaymentgateway/payment/response');
+    $abortUrl = $this->_urlBuilder->getUrl('checkout/onepage/failure');
+    $failUrl = $this->_urlBuilder->getUrl('checkout/onepage/failure');
+    $successUrl = $this->_urlBuilder->getUrl('checkout/onepage/success');
+    $returnUrl = $this->_urlBuilder->getUrl('payl8rpaymentgateway/payment/response');
 
     $products = [];
     foreach ($order->getItems() as $product) {
@@ -124,33 +122,35 @@ class Data extends AbstractHelper {
   
   public function processResponse( $response ) {
     
+    $this->logger->debug($response);
+    
     $order = $this->orderRepository->get($response->order_id);
+    
     switch( $response->status  ) {
       case 'ACCEPTED':
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus('payl8r_accepted');
-                    $state = Order::STATE_PAYMENT_REVIEW;
-            $status = Order::STATUS_FRAUD;
-
-        $order->setState( Mage_Sales_Model_Order::STATE_PROCESSING, 'payl8r_accepted', 'Payment Successful', true );
+        $order->addStatusToHistory($order->getStatus(), 'Payment Successful', true);
         $order->save();
         try {
-          $order->queueNewOrderEmail();
+          $this->orderSender->send($order);
         } catch (Exception $e) {}
         break;
       case 'DECLINED':
-        $order->setState(  Mage_Sales_Model_Order::STATE_CANCELED, 'payl8r_declined', $response->reason, false );
+        $order->setState(Order::STATE_CANCELED);
+        $order->setStatus('payl8r_declined');
+        $order->addStatusToHistory($order->getStatus(), $response->reason, false);
         $order->save();
         break;
       case 'ABANDONED':
       default:
-        $order->setState(  Mage_Sales_Model_Order::STATE_CANCELED, 'payl8r_abandoned', $response->reason, false );
+        $order->setState(Order::STATE_CANCELED);
+        $order->setStatus('payl8r_abandoned');
+        $order->addStatusToHistory($order->getStatus(), $response->reason, false);
         $order->save();
         break;
     }
     
-    Mage::log( $order->getState(), null, 'system.log', true );              
-
   }
   
   

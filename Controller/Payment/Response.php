@@ -9,9 +9,11 @@ class Response extends \Magento\Payl8rPaymentGateway\Controller\Payment {
 
   public function execute() {
     
-    $order = $this->_coreRegistry->registry('payl8r_order');
+    $publicKey = $this->config->getValue('merchant_gateway_key');
+    $params = $this->request->getParams();
+
     
-    echo var_export($this->_coreRegistry);
+    echo var_export($params);
     echo var_export($order);
     
     die('test index');

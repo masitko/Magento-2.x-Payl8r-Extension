@@ -3,52 +3,38 @@
 namespace Magento\Payl8rPaymentGateway\Controller;
 
 use Magento\Framework\App\ObjectManager;
-use \Magento\Framework\App\Request\Http;
+use Magento\Payment\Gateway\ConfigInterface;
+use Magento\Framework\App\Action\Context;
+use Magento\Payl8rPaymentGateway\Helper\Data;
+use Magento\Framework\App\Request\Http;
 
 /**
  * DirectPost Payment Controller
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-abstract class Payment extends \Magento\Framework\App\Action\Action
-{
-    /**
-     * Core registry
-     *
-     * @var \Magento\Framework\Registry
-     */
-    protected $_coreRegistry = null;
+abstract class Payment extends \Magento\Framework\App\Action\Action {
 
-    protected $dataHelper;
-    protected $request;
-    
+  protected $dataHelper;
+  protected $request;
+  protected $logger;
+  protected $config;
 
-    /**
-     * Constructor
-     *
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Payl8rPaymentGateway\Helper\Data $dataHelper
-     * @param \Magento\Framework\App\Request\Http $request
-     */
-    public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Payl8rPaymentGateway\Helper\Data $dataHelper,
-        \Magento\Framework\App\Request\Http $request
-    ) {
-        $this->_coreRegistry = $coreRegistry;
-        $this->dataHelper = $dataHelper;
-        $this->request = $request;
-        parent::__construct($context);
-    }
-
-    /**
-     * @return \Magento\Checkout\Model\Session
-     */
-    protected function _getCheckout()
-    {
-        return $this->_objectManager->get(\Magento\Checkout\Model\Session::class);
-    }
+  /**
+   * 
+   * @param \Magento\Framework\App\Action\Context $context
+   * @param \Magento\Payl8rPaymentGateway\Helper\Data $dataHelper
+   * @param \Magento\Framework\App\Request\Http $request
+   * @param ConfigInterface $config
+   */
+  public function __construct(
+  Context $context, Data $dataHelper, Http $request, ConfigInterface $config
+  ) {
+    $this->logger = ObjectManager::getInstance()->get(LoggerInterface::class);
+    $this->dataHelper = $dataHelper;
+    $this->request = $request;
+    $this->config = $config;
+    parent::__construct($context);
+  }
 
 }
