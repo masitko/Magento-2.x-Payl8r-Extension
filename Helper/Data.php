@@ -5,7 +5,6 @@ namespace Magento\Payl8rPaymentGateway\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\UrlInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Sales\Model\OrderRepository;
@@ -19,7 +18,6 @@ class Data extends AbstractHelper {
   private $orderRepository;
   private $config;
   private $logger;
-  private $urlBuilder;
   private $encryptor;
   private $orderSender;
 
@@ -37,7 +35,6 @@ class Data extends AbstractHelper {
     $this->orderRepository = $orderRepository;
     $this->orderSender = $orderSender;
     $this->config = $config;
-//    $this->urlBuilder = $urlBuilder;
     $this->encryptor = $encryptor;
     $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
 

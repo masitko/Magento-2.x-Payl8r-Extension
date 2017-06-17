@@ -7,6 +7,7 @@ use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Framework\App\Action\Context;
 use Magento\Payl8rPaymentGateway\Helper\Data;
 use Magento\Framework\App\Request\Http;
+use Magento\Payment\Model\Method\Logger;
 
 /**
  * DirectPost Payment Controller
@@ -28,9 +29,9 @@ abstract class Payment extends \Magento\Framework\App\Action\Action {
    * @param ConfigInterface $config
    */
   public function __construct(
-  Context $context, Data $dataHelper, Http $request, ConfigInterface $config
+  Context $context, Data $dataHelper, Http $request, ConfigInterface $config, Logger $logger
   ) {
-    $this->logger = ObjectManager::getInstance()->get(LoggerInterface::class);
+    $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
     $this->dataHelper = $dataHelper;
     $this->request = $request;
     $this->config = $config;
