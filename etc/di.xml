@@ -7,6 +7,8 @@
                 type="Magento\Payl8rPaymentGateway\Model\GuestPaymentInformationManagement" />
   <preference for="Magento\Payl8rPaymentGateway\Api\PaymentInformationManagementInterface" 
                 type="Magento\Payl8rPaymentGateway\Model\PaymentInformationManagement" />
+  <preference for="Magento\Payment\Gateway\ConfigInterface" 
+                type="Payl8rPaymentGatewayConfig" />
 
   <!-- Data Helper -->
   <type name="Magento\Payl8rPaymentGateway\Helper\Data">
