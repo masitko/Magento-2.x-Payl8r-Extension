@@ -18,6 +18,14 @@
     </arguments>
   </type>
 
+  <!-- Controllers -->
+  <type name="Magento\Payl8rPaymentGateway\Controller\Payment">
+    <arguments>
+      <argument name="config" xsi:type="object">Payl8rPaymentGatewayConfig</argument>
+      <argument name="logger" xsi:type="object">Payl8rPaymentGatewayLogger</argument>
+    </arguments>
+  </type>
+
   <!-- Payment Method Facade configuration -->
   <virtualType name="Payl8rPaymentGatewayFacade" type="Magento\Payment\Model\Method\Adapter">
     <arguments>

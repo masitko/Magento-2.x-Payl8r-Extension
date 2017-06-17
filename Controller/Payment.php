@@ -29,7 +29,7 @@ abstract class Payment extends \Magento\Framework\App\Action\Action {
    * @param ConfigInterface $config
    */
   public function __construct(
-  Context $context, Data $dataHelper, Http $request, ConfigInterface $config, Logger $logger
+  Context $context, Data $dataHelper, Http $request, ConfigInterface $config, Logger $logger = null
   ) {
     $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
     $this->dataHelper = $dataHelper;
