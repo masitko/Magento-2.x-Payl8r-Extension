@@ -54,8 +54,8 @@ class Data extends AbstractHelper {
     $username = $this->config->getValue('merchant_username', $order->getStoreId());
     $publicKey = $this->config->getValue('merchant_gateway_key', $order->getStoreId());
     
-    $abortUrl = $this->_urlBuilder->getUrl('checkout/onepage/failure');
-    $failUrl = $this->_urlBuilder->getUrl('checkout/onepage/failure');
+    $abortUrl = $this->_urlBuilder->getUrl('payl8rpaymentgateway/payment/cancel');
+    $failUrl = $this->_urlBuilder->getUrl('payl8rpaymentgateway/payment/cancel');
     $successUrl = $this->_urlBuilder->getUrl('checkout/onepage/success');
     $returnUrl = $this->_urlBuilder->getUrl('payl8rpaymentgateway/payment/response');
 
@@ -119,7 +119,7 @@ class Data extends AbstractHelper {
   
   public function processResponse( $response ) {
     
-    $this->logger->debug($response);
+    $this->logger->debug((array)$response);
     
     $order = $this->orderRepository->get($response->order_id);
     

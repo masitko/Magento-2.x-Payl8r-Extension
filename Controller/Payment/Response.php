@@ -17,6 +17,9 @@ class Response extends \Magento\Payl8rPaymentGateway\Controller\Payment {
     }
     
     $response = $params['response'];
+    
+    $this->logger->debug(array('RESPONSE !!!!!!!!!'));
+    
     if ($encrypted_response = base64_decode($response)) {
       if (openssl_public_decrypt($encrypted_response, $json_response, $publicKey)) {
         if ($decoded_response = json_decode($json_response)) {
