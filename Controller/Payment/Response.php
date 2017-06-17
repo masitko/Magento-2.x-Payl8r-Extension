@@ -11,15 +11,26 @@ class Response extends \Magento\Payl8rPaymentGateway\Controller\Payment {
     
     $publicKey = $this->config->getValue('merchant_gateway_key');
     $params = $this->request->getParams();
+    
+    if( !isset($params['response'])) {
+      die();
+    }
+    
+    $response = $params['response'];
+    if ($encrypted_response = base64_decode($response)) {
+      if (openssl_public_decrypt($encrypted_response, $json_response, $publicKey)) {
+        if ($decoded_response = json_decode($json_response)) {
+          if (isset($decoded_response->return_data)) {
+            if ($decoded_response->return_data->order_id != '') {
+              $this->dataHelper->processResponse($decoded_response->return_data);
+              echo 'OK';
+            }
+          }
+        }
+      }
+    }
 
-    echo var_export($params);
-//    echo var_export($order);
-    
-    $this->logger->debug(array('RESPONSE!!!!!'));
-    $this->logger->debug(array($publicKey));
-    $this->logger->debug($params);
-    
-    die('test index');
+    die();
   }
 
 }
