@@ -114,36 +114,6 @@ class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPa
     /**
      * {@inheritDoc}
      */
-    public function savePaymentInformationAndGetIframeData(
-        $cartId,
-        $email,
-        \Magento\Quote\Api\Data\PaymentInterface $paymentMethod,
-        \Magento\Quote\Api\Data\AddressInterface $billingAddress = null
-    ) {
-        $this->logger->info('Payment method 1 !!!');
-        $this->savePaymentInformation($cartId, $email, $paymentMethod, $billingAddress);
-//        try {
-//            $orderId = $this->cartManagement->placeOrder($cartId);
-//        } catch (\Magento\Framework\Exception\LocalizedException $e) {
-//            throw new CouldNotSaveException(
-//                __($e->getMessage()),
-//                $e
-//            );
-//        } catch (\Exception $e) {
-//            $this->getLogger()->critical($e);
-//            throw new CouldNotSaveException(
-//                __('An error occurred on the server. Please try to place the order again.'),
-//                $e
-//            );
-//        }
-//        return $orderId;
-//        return $this->dataHelper->test();
-        return $this->dataHelper->test();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function savePaymentInformation(
         $cartId,
         $email,

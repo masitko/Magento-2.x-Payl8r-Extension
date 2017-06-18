@@ -9,6 +9,9 @@ use Magento\Framework\Exception\CouldNotSaveException;
  */
 class PaymentInformationManagement implements \Magento\Checkout\Api\PaymentInformationManagementInterface
 {
+
+    protected $dataHelper;
+
     /**
      * @var \Magento\Quote\Api\BillingAddressManagementInterface
      * @deprecated This call was substituted to eliminate extra quote::save call
@@ -46,24 +49,27 @@ class PaymentInformationManagement implements \Magento\Checkout\Api\PaymentInfor
     private $cartRepository;
 
     /**
+     * 
      * @param \Magento\Quote\Api\BillingAddressManagementInterface $billingAddressManagement
      * @param \Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement
      * @param \Magento\Quote\Api\CartManagementInterface $cartManagement
-     * @param PaymentDetailsFactory $paymentDetailsFactory
+     * @param \Magento\Checkout\Model\PaymentDetailsFactory $paymentDetailsFactory
+     * @param \Magento\Payl8rPaymentGateway\Helper\Data $dataHelper
      * @param \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalsRepository
-     * @codeCoverageIgnore
      */
     public function __construct(
         \Magento\Quote\Api\BillingAddressManagementInterface $billingAddressManagement,
         \Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement,
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
         \Magento\Checkout\Model\PaymentDetailsFactory $paymentDetailsFactory,
+        \Magento\Payl8rPaymentGateway\Helper\Data $dataHelper,
         \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalsRepository
     ) {
         $this->billingAddressManagement = $billingAddressManagement;
         $this->paymentMethodManagement = $paymentMethodManagement;
         $this->cartManagement = $cartManagement;
         $this->paymentDetailsFactory = $paymentDetailsFactory;
+        $this->dataHelper = $dataHelper;
         $this->cartTotalsRepository = $cartTotalsRepository;
     }
 
@@ -90,7 +96,12 @@ class PaymentInformationManagement implements \Magento\Checkout\Api\PaymentInfor
                 $e
             );
         }
-        return $orderId;
+//        return $orderId;
+        return [
+          'order' => $orderId,
+          'iframeData'  => $this->dataHelper->prepareIframeData($orderId)
+          ];
+        
     }
 
     /**

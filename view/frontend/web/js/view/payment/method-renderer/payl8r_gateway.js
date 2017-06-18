@@ -9,8 +9,10 @@ define(
           'Magento_Checkout/js/model/full-screen-loader',
           'Magento_Checkout/js/model/quote',
           'Magento_Checkout/js/model/url-builder',
+          'Magento_Customer/js/model/customer',
+          'Magento_Customer/js/customer-data'
         ],
-        function (storage, Component, iframe, fullScreenLoader, quote, urlBuilder) {
+        function (storage, Component, iframe, fullScreenLoader, quote, urlBuilder, customer, customerData) {
           'use strict';
 
           return Component.extend({
@@ -27,8 +29,8 @@ define(
             initObservable: function () {
 
               this._super().observe([
-                        'paymentReady', 'iframeAction', 'iframeUsername', 'iframePayload'
-                      ]);
+                'paymentReady', 'iframeAction', 'iframeUsername', 'iframePayload'
+              ]);
               return this;
             },
             isPaymentReady: function () {
@@ -68,6 +70,10 @@ define(
             },
             afterPlaceOrder: function () {
               console.log('AFTER PLACING.....');
+              // invalidating session to clear cart...
+              var sections = ['cart'];
+              customerData.invalidate(sections);
+              customerData.reload(sections, true);
               if (this.iframeIsLoaded) {
                 document.getElementById(this.getCode() + '-iframe')
                         .contentWindow.location.reload();
@@ -89,16 +95,25 @@ define(
 
             placeOrderPayl8r: function () {
 //            fullScreenLoader.startLoader();
-              var self = this;
+              var self = this, serviceUrl;
               var payload = {
                 cartId: quote.getQuoteId(),
                 billingAddress: quote.billingAddress(),
                 paymentMethod: this.getData(),
-                email: quote.guestEmail
               };
-              var serviceUrl = urlBuilder.createUrl('/payl8r/guest-carts/:quoteId/payment-information', {
-                quoteId: quote.getQuoteId()
-              });
+//              var serviceUrl = urlBuilder.createUrl('/payl8r/guest-carts/:quoteId/payment-information', {
+//                quoteId: quote.getQuoteId()
+//              });
+
+              if (customer.isLoggedIn()) {
+                serviceUrl = urlBuilder.createUrl('/payl8r/carts/mine/payment-information', {});
+              } else {
+                serviceUrl = urlBuilder.createUrl('/payl8r/guest-carts/:quoteId/payment-information', {
+                  quoteId: quote.getQuoteId()
+                });
+                payload.email = quote.guestEmail;
+              }
+
               return storage.post(serviceUrl, JSON.stringify(payload))
                       .done(
                               function (response) {
@@ -108,15 +123,14 @@ define(
                                   self.iframeUsername(response[1].rid);
                                   self.iframePayload(response[1].data);
                                   window.addEventListener("message", pl_iframe_heightUpdate, false);
-                                   var prevHeight = jQuery('[name="payl8rFrame"]').height();
+                                  var prevHeight = jQuery('[name="payl8rFrame"]').height();
                                   function pl_iframe_heightUpdate(event) {
                                     var origin = event.origin || event.originalEvent.origin;
                                     if (origin !== "https://payl8r.com")
                                       return;
-                                    console.log('RESIZING!!!', prevHeight, jQuery('[name="payl8rFrame"]').height());
                                     if (prevHeight !== jQuery('[name="payl8rFrame"]').height())
                                       prevHeight = event.data;
-                                      jQuery('[name="payl8rFrame"]').height(event.data);
+                                    jQuery('[name="payl8rFrame"]').height(event.data);
                                   }
                                   document.getElementById("payl8rForm").submit();
                                 }
