@@ -122,16 +122,27 @@ define(
                                   self.iframeAction(response[1].action);
                                   self.iframeUsername(response[1].rid);
                                   self.iframePayload(response[1].data);
+
                                   window.addEventListener("message", pl_iframe_heightUpdate, false);
-                                  var prevHeight = jQuery('[name="payl8rFrame"]').height();
+                                  self.prevHeight = jQuery('[name="payl8rFrame"]').height();
                                   function pl_iframe_heightUpdate(event) {
                                     var origin = event.origin || event.originalEvent.origin;
-                                    if (origin !== "https://payl8r.com")
+                                    if (origin !== "https://payl8r.com" && origin !== "https://staging.payl8r.com")
                                       return;
-                                    if (prevHeight !== jQuery('[name="payl8rFrame"]').height())
-                                      prevHeight = event.data;
-                                    jQuery('[name="payl8rFrame"]').height(event.data);
+                                    if (self.prevHeight !== jQuery('[name="payl8rFrame"]').height() + 90)
+                                      jQuery('[name="payl8rFrame"]').height(event.data + 90);
                                   }
+//                                  window.addEventListener("message", pl_iframe_heightUpdate, false);
+//                                  var prevHeight = jQuery('[name="payl8rFrame"]').height();
+//                                  function pl_iframe_heightUpdate(event) {
+//                                    var origin = event.origin || event.originalEvent.origin;
+//                                    if (origin !== "https://payl8r.com")
+//                                      return;
+//                                    if (prevHeight !== jQuery('[name="payl8rFrame"]').height())
+//                                      prevHeight = event.data;
+//                                    jQuery('[name="payl8rFrame"]').height(event.data);
+//                                  }
+
                                   document.getElementById("payl8rForm").submit();
                                 }
                               }
