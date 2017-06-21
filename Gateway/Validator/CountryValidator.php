@@ -35,18 +35,18 @@ class CountryValidator extends AbstractValidator {
 //    $response = $this->curl->read();
 //    $this->curl->close();
 
-    $ch = curl_init("https://payl8r.com/getrates");
-
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-      "Content-Type: text/plain", 
-    ));
-
-    $result = curl_exec($ch);    
-    
-    $this->logger->info('Country Validator!!!');
-    $this->logger->info('Response: '.json_encode($result));
+//    $ch = curl_init("https://payl8r.com/getrates");
+//
+//    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+//    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+//      "Content-Type: text/plain", 
+//    ));
+//
+//    $result = curl_exec($ch);    
+//    
+//    $this->logger->info('Country Validator!!!');
+//    $this->logger->info('Response: '.json_encode($result));
     if ($validationSubject['country'] !== 'GB') {
       $isValid = false;
     }

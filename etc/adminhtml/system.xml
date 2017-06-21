@@ -24,9 +24,9 @@
                     <label>Test Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="min_order_total" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
+<!--                <field id="min_order_total" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Minimum Order Total</label>
-                </field>
+                </field>-->
                 <field id="allowspecific" translate="label" type="allowspecific" sortOrder="130" showInDefault="9"
                        showInWebsite="1" showInStore="0">
                     <label>Payment From Applicable Countries</label>

@@ -4,11 +4,11 @@
   
   
   <preference for="Magento\Payl8rPaymentGateway\Api\GuestPaymentInformationManagementInterface" 
-                type="Magento\Payl8rPaymentGateway\Model\GuestPaymentInformationManagement" />
+              type="Magento\Payl8rPaymentGateway\Model\GuestPaymentInformationManagement" />
   <preference for="Magento\Payl8rPaymentGateway\Api\PaymentInformationManagementInterface" 
-                type="Magento\Payl8rPaymentGateway\Model\PaymentInformationManagement" />
+              type="Magento\Payl8rPaymentGateway\Model\PaymentInformationManagement" />
   <preference for="Magento\Payment\Gateway\ConfigInterface" 
-                type="Payl8rPaymentGatewayConfig" />
+              type="Payl8rPaymentGatewayConfig" />
 
   <!-- Data Helper -->
   <type name="Magento\Payl8rPaymentGateway\Helper\Data">
@@ -82,6 +82,13 @@
   <type name="Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation">
     <arguments>
       <argument name="stateCommand" xsi:type="object">Magento\Payl8rPaymentGateway\Model\Order\Payment\State\AuthorizeCommand</argument>
+    </arguments>
+  </type>
+  <type name="Magento\Payment\Model\Checks\SpecificationFactory">
+    <arguments>
+      <argument name="mapping" xsi:type="array">
+        <item name="total" xsi:type="object">Magento\Payl8rPaymentGateway\Model\Checks\TotalMinMax</item>
+      </argument>
     </arguments>
   </type>
 
