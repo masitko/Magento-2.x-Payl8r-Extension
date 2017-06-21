@@ -3,7 +3,6 @@
 namespace Magento\Payl8rPaymentGateway\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\Payl8rPaymentGateway\Gateway\Http\Client\ClientMock;
 
 /**
  * Class ConfigProvider
